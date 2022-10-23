@@ -50,6 +50,15 @@ def get_jack_device():
     # return default device on failure
     return "0"
 
+# Set/change current jack device
+def set_jack_device_cmd(dev: str) -> list[str]:
+    return [
+        f"jack_control dps device hw:{dev}",
+        # Restart jack after setting dev
+        "jack_control stop",
+        "jack_control start"
+    ]
+
 # Get scontrols of a sound card
 def get_amixer_scontrols(card: str) -> list[str]:
     try:
