@@ -14,12 +14,21 @@ In addition, JACK server should be configured to use ALSA driver.
 
 ## Installation
 
+From pypi (recommended):
+
 ```sh
-# From pypi
 pip install jack-alsa-ctl
-# From git repo
+```
+
+From git repo (for dev version)
+
+```sh
 pip install git+https://github.com/DCsunset/jack-alsa-ctl
-# Or clone and install locally
+```
+
+Or clone and install locally (for dev):
+
+```sh
 git clone https://github.com/DCsunset/jack-alsa-ctl
 cd jack-alsa-ctl
 pip install .
