@@ -18,8 +18,8 @@ import sys
 import re
 from pathlib import Path
 import subprocess
-from enum import Enum
-from .lib import get_volume_cmd, mute_cmd, mic_mute_cmd, raise_volume_cmd, lower_volume_cmd, get_jack_device, list_cards
+import argparse
+from .lib import get_volume_cmd, mute_cmd, mic_mute_cmd, raise_volume_cmd, lower_volume_cmd, get_jack_device, list_devices
 
 def error(msg: str):
 	print(msg, file=sys.stderr)
@@ -53,55 +53,75 @@ def get_volume(volume_type: str):
 		)
 	))
 
+
 def main():
-	if len(sys.argv) < 2:
-		error("Usage: audio_cmd.py <cmd> [args]")
+	parser = argparse.ArgumentParser(
+		description="Control JACK audio with ALSA driver easily via CLI",
+		formatter_class=argparse.ArgumentDefaultsHelpFormatter
+	)
+	# For commands
+	sub_parser = parser.add_subparsers(dest="command", required=True)
 
-	cmd = sys.argv[1]
+	# list_devices
+	list_devices_parser = sub_parser.add_parser("list_devices")
+	list_devices_parser.add_argument(
+		"max_num",
+		nargs="?",
+		default=0,
+		type=int,
+		help="max number of devices to display (non-positive num means no limit)"
+	)
+	# get_device
+	get_device_parser = sub_parser.add_parser("get_device")
+	# get_volume
+	get_volume_parser = sub_parser.add_parser("get_volume")
+	get_volume_parser.add_argument(
+		"volume_type",
+		nargs="?",
+		default="Playback",
+		choices=["Playback", "Capture"],
+		help="get current volume of a specific type"
+	)
+	# mute
+	mute_parser = sub_parser.add_parser("mute")
+	# mic mute
+	mic_mute_parser = sub_parser.add_parser("mic_mute")
+	# raise_volume
+	raise_volume_parser = sub_parser.add_parser("raise_volume")
+	raise_volume_parser.add_argument(
+		"step",
+		nargs="?",
+		default=2,
+		type=int,
+		help="raise volume by a value"
+	)
+	# lower_volume
+	lower_volume_parser = sub_parser.add_parser("lower_volume")
+	lower_volume_parser.add_argument(
+		"step",
+		nargs="?",
+		default=2,
+		type=int,
+		help="raise volume by a value"
+	)
 
-	if cmd == "list_cards":
-		max_num = 0
-		if len(sys.argv) == 3:
-			max_num = int(sys.argv[2])
-		elif len(sys.argv) > 3:
-			error("Invalid num of args")
-		print("\n".join(list_cards(max_num)))
-
+	# Process args
+	args = parser.parse_args()
+	cmd = args.command
+	if cmd == "list_devices":
+		print("\n".join(list_devices(args.max_num)))
 	elif cmd == "get_device":
 		print(get_jack_device())
-
 	elif cmd == "get_volume":
-		volume_type = "Playback"
-		if len(sys.argv) == 3:
-			volume_type = sys.argv[2]
-		elif len(sys.argv) > 3:
-			error("Invalid num of args")
-		get_volume(volume_type)
-
+		get_volume(args.volume_type)
 	elif cmd == "mute":
 		run_cmd(mute_cmd())
-
 	elif cmd == "mic_mute":
 		run_cmd(mic_mute_cmd())
-		
 	elif cmd == "raise_volume":
-		step = 2
-		if len(sys.argv) == 3:
-			step = int(sys.argv[2])
-		elif len(sys.argv) > 3:
-			error("Invalid num of args")
-		run_cmd(raise_volume_cmd(step))
-
+		run_cmd(raise_volume_cmd(args.step))
 	elif cmd == "lower_volume":
-		step = 2
-		if len(sys.argv) == 3:
-			step = int(sys.argv[2])
-		elif len(sys.argv) > 3:
-			error("Invalid num of args")
-		run_cmd(lower_volume_cmd(step))
-
-	else:
-		error(f"Invalid command: {cmd}")
+		run_cmd(lower_volume_cmd(args.step))
 
 if __name__ == "__main__":
 	main()

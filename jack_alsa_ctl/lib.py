@@ -16,9 +16,9 @@ import subprocess
 import sys
 import re
 
-# List all sound cards
+# List all sound devices
 # max_num <= 0 means no limit
-def list_cards(max_num: int = 0) -> list[str]:
+def list_devices(max_num: int = 0) -> list[str]:
 	res = subprocess.run(["cat", "/proc/asound/cards"], capture_output=True)
 	if res.returncode != 0:
 		return []
