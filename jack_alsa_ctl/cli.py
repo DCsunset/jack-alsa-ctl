@@ -15,8 +15,10 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import sys
+import re
 from pathlib import Path
 import subprocess
+from enum import Enum
 from .lib import get_volume_cmd, mute_cmd, mic_mute_cmd, raise_volume_cmd, lower_volume_cmd, get_jack_device, list_cards
 
 def error(msg: str):
@@ -30,11 +32,26 @@ def run_cmd(cmd: list[str] | str):
 	else:
 		subprocess.run(cmd, shell=True)
 
-def get_volume():
+
+volume_types = ("Capture", "Playback")
+
+def get_volume(volume_type: str):
+	if volume_type not in volume_types:
+		error(f"Invalid volume type: {volume_type}")
+
 	res = subprocess.run(get_volume_cmd(), shell=True, capture_output=True)
 	out = res.stdout.decode("utf-8")
 	# filter capture volume
-	print("\n".join(filter(lambda l: "Capture" not in l, out.splitlines())))
+	regex = re.compile(f"{volume_type}.*\\[\\d?\\d?\\d%\\]")
+	print("\n".join(
+		map(
+			lambda l: l.strip(),
+			filter(
+				lambda l: regex.search(l) is not None,
+				out.splitlines()
+			)
+		)
+	))
 
 def main():
 	if len(sys.argv) < 2:
@@ -54,7 +71,12 @@ def main():
 		print(get_jack_device())
 
 	elif cmd == "get_volume":
-		get_volume()
+		volume_type = "Playback"
+		if len(sys.argv) == 3:
+			volume_type = sys.argv[2]
+		elif len(sys.argv) > 3:
+			error("Invalid num of args")
+		get_volume(volume_type)
 
 	elif cmd == "mute":
 		run_cmd(mute_cmd())
@@ -69,6 +91,7 @@ def main():
 		elif len(sys.argv) > 3:
 			error("Invalid num of args")
 		run_cmd(raise_volume_cmd(step))
+
 	elif cmd == "lower_volume":
 		step = 2
 		if len(sys.argv) == 3:
@@ -76,6 +99,7 @@ def main():
 		elif len(sys.argv) > 3:
 			error("Invalid num of args")
 		run_cmd(lower_volume_cmd(step))
+
 	else:
 		error(f"Invalid command: {cmd}")
 
