@@ -1,5 +1,3 @@
-#!/usr/bin/python
-
 # jack-alsa-ctl
 # Copyright (C) 2022 DCsunset
 #
