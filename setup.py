@@ -12,7 +12,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-from distutils.core import setup
+from setuptools import setup
 from pathlib import Path
 
 repo_dir = Path(__file__).parent.absolute()
@@ -32,6 +32,7 @@ setup(
 	version=main_ns["__version__"],
 	description="Control JACK audio with ALSA driver easily",
 	long_description=long_description,
+	long_description_content_type='text/markdown',
 	author="DCsunset",
 	author_email='DCsunset@protonmail.com',
 	license="AGPL-3.0",
