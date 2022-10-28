@@ -1,4 +1,4 @@
-const re = /^__version__ = '(\d\.\d\.\d)'/gm;
+const re = /^__version__ = "(\d\.\d\.\d)"/gm;
 
 function readVersion(contents) {
 	const matches = re.exec(contents);
