@@ -15,8 +15,6 @@
 from distutils.core import setup
 from pathlib import Path
 
-version = "0.1.0"
-
 repo_dir = Path(__file__).parent.absolute()
 
 # get version
