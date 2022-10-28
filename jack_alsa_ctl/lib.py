@@ -19,10 +19,8 @@ import re
 # List all sound devices
 # max_num <= 0 means no limit
 def list_devices(max_num: int = 0) -> list[str]:
-	res = subprocess.run(["cat", "/proc/asound/cards"], capture_output=True)
-	if res.returncode != 0:
-		return []
-	out = res.stdout.decode("utf-8")
+	with open("/proc/asound/cards", "r") as f:
+		out = f.read()
 	regex = re.compile(r"\[\s*(.+?)\s*\]")
 	cards = regex.findall(out)
 	if max_num > 0:
