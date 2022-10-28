@@ -17,6 +17,7 @@ import re
 from pathlib import Path
 import subprocess
 import argparse
+from ._version import __version__
 from .lib import get_volume_cmd, mute_cmd, mic_mute_cmd, raise_volume_cmd, lower_volume_cmd, get_jack_device, list_devices
 
 def error(msg: str):
@@ -57,7 +58,7 @@ def main():
 		description="Control JACK audio with ALSA driver easily via CLI",
 		formatter_class=argparse.ArgumentDefaultsHelpFormatter
 	)
-	parser.add_argument("--version", action="version", version="%(prog)s 0.1.0")
+	parser.add_argument("--version", action="version", version=f"%(prog)s {__version__}")
 	
 	# For commands
 	sub_parser = parser.add_subparsers(
