@@ -18,7 +18,7 @@ from pathlib import Path
 import subprocess
 import argparse
 from ._version import __version__
-from .lib import get_volume_cmd, mute_cmd, mic_mute_cmd, raise_volume_cmd, lower_volume_cmd, get_jack_device, list_devices
+from .lib import get_volume_cmd, mute_cmd, mic_mute_cmd, raise_volume_cmd, lower_volume_cmd, get_jack_device, list_devices, set_jack_device_cmd
 
 def error(msg: str):
 	print(msg, file=sys.stderr)
@@ -85,6 +85,16 @@ def main():
 		"get_device",
 		help="get current device used by JACK server"
 	)
+	# set device
+	set_device_parser = sub_parser.add_parser(
+		"set_device",
+		help="set device used by JACK server"
+	)
+	set_device_parser.add_argument(
+		"device",
+		type=str,
+		help="device name"
+	)
 	# get_volume
 	get_volume_parser = sub_parser.add_parser(
 		"get_volume",
@@ -139,6 +149,8 @@ def main():
 		print("\n".join(list_devices(args.max_num)))
 	elif cmd == "get_device":
 		print(get_jack_device())
+	elif cmd == "set_device":
+		run_cmd(set_jack_device_cmd(args.device))
 	elif cmd == "get_volume":
 		get_volume(args.volume_type)
 	elif cmd == "mute":
