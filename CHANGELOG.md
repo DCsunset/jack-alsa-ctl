@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.1.0](https://github.com/DCsunset/jack-alsa-ctl/compare/v1.0.1...v1.1.0) (2022-10-28)
+
+
+### Features
+
+* add set_device command ([96d12be](https://github.com/DCsunset/jack-alsa-ctl/commit/96d12be603c2672c3d0924752a47f20ce6372b18))
+
 ### [1.0.1](https://github.com/DCsunset/jack-alsa-ctl/compare/v1.0.0...v1.0.1) (2022-10-28)
 
 
