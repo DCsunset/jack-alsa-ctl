@@ -1,0 +1,8 @@
+{
+	"bumpFiles": [
+		{
+			"filename": "jack_alsa_ctl/_version.py",
+			"updater": "version-updater.js"
+		}
+	]
+}
