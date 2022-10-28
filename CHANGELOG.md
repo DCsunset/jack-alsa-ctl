@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.0.1](https://github.com/DCsunset/jack-alsa-ctl/compare/v1.0.0...v1.0.1) (2022-10-28)
+
+
+### Bug Fixes
+
+* fix version-updater ([91ad3b1](https://github.com/DCsunset/jack-alsa-ctl/commit/91ad3b12bf1777c271b2d4090018c71f3c376cff))
+* use setuptools and fix long description ([5227d9e](https://github.com/DCsunset/jack-alsa-ctl/commit/5227d9e13a64e24e878eb60cb6c4a9fe88556bc0))
+
 ## 1.0.0 (2022-10-28)
 
 
