@@ -57,11 +57,21 @@ def main():
 		description="Control JACK audio with ALSA driver easily via CLI",
 		formatter_class=argparse.ArgumentDefaultsHelpFormatter
 	)
+	parser.add_argument("--version", action="version", version="%(prog)s 0.1.0")
+	
 	# For commands
-	sub_parser = parser.add_subparsers(dest="command", required=True)
+	sub_parser = parser.add_subparsers(
+		dest="command",
+		metavar="<command>",
+		help="command to execute",
+		required=True
+	)
 
 	# list_devices
-	list_devices_parser = sub_parser.add_parser("list_devices")
+	list_devices_parser = sub_parser.add_parser(
+		"list_devices",
+		help="List available sound devices"
+	)
 	list_devices_parser.add_argument(
 		"max_num",
 		nargs="?",
@@ -70,22 +80,37 @@ def main():
 		help="max number of devices to display (non-positive num means no limit)"
 	)
 	# get_device
-	get_device_parser = sub_parser.add_parser("get_device")
+	get_device_parser = sub_parser.add_parser(
+		"get_device",
+		help="get current device used by JACK server"
+	)
 	# get_volume
-	get_volume_parser = sub_parser.add_parser("get_volume")
+	get_volume_parser = sub_parser.add_parser(
+		"get_volume",
+		help="get current volume"
+	)
 	get_volume_parser.add_argument(
 		"volume_type",
 		nargs="?",
 		default="Playback",
 		choices=["Playback", "Capture"],
-		help="get current volume of a specific type"
+		help="get volume of a specific type"
 	)
 	# mute
-	mute_parser = sub_parser.add_parser("mute")
+	mute_parser = sub_parser.add_parser(
+		"mute",
+		help="mute current device"
+	)
 	# mic mute
-	mic_mute_parser = sub_parser.add_parser("mic_mute")
+	mic_mute_parser = sub_parser.add_parser(
+		"mic_mute",
+		help="mute mic of current device"
+	)
 	# raise_volume
-	raise_volume_parser = sub_parser.add_parser("raise_volume")
+	raise_volume_parser = sub_parser.add_parser(
+		"raise_volume",
+		help="raise volume"
+	)
 	raise_volume_parser.add_argument(
 		"step",
 		nargs="?",
@@ -94,7 +119,10 @@ def main():
 		help="raise volume by a value"
 	)
 	# lower_volume
-	lower_volume_parser = sub_parser.add_parser("lower_volume")
+	lower_volume_parser = sub_parser.add_parser(
+		"lower_volume",
+		help="lower volume"
+	)
 	lower_volume_parser.add_argument(
 		"step",
 		nargs="?",

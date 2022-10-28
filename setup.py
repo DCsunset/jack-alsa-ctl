@@ -19,6 +19,11 @@ version = "0.1.0"
 
 repo_dir = Path(__file__).parent.absolute()
 
+# get version
+main_ns = {}
+with open(repo_dir.joinpath("jack_alsa_ctl", "_version.py")) as f:
+	exec(f.read(), main_ns)
+
 # Long description
 readme = repo_dir.joinpath('README.md')
 with open(readme, "r") as f:
@@ -26,7 +31,7 @@ with open(readme, "r") as f:
 
 setup(
 	name="jack-alsa-ctl",
-	version=version,
+	version=main_ns["__version__"],
 	description="Control JACK audio with ALSA driver easily",
 	long_description=long_description,
 	author="DCsunset",
