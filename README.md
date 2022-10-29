@@ -1,5 +1,7 @@
 # jack-alsa-ctl
 
+[![PyPI](https://img.shields.io/pypi/v/jack-alsa-ctl)](https://pypi.org/project/jack-alsa-ctl/)
+
 Control JACK audio with ALSA driver easily.
 
 ## Dependencies
