@@ -6,7 +6,7 @@ function readVersion(contents) {
 }
 
 function writeVersion(contents, version) {
-	return contents.replace(re, `__version__ = '${version}'`);
+	return contents.replace(re, `__version__ = "${version}"`);
 }
 
 module.exports = {
