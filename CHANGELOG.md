@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.2.0](https://github.com/DCsunset/jack-alsa-ctl/compare/v1.1.1...v1.2.0) (2022-10-29)
+
+
+### Features
+
+* add completion command and add script to package data ([e9b40d1](https://github.com/DCsunset/jack-alsa-ctl/commit/e9b40d1d1a73413b63fec3a450764a0a4c4ad425))
+* add zsh completion ([86b17fb](https://github.com/DCsunset/jack-alsa-ctl/commit/86b17fb6b390f8b60e3d066c8c3080c5bf92a6e9))
+
 ### [1.1.1](https://github.com/DCsunset/jack-alsa-ctl/compare/v1.1.0...v1.1.1) (2022-10-29)
 
 
