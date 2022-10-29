@@ -36,6 +36,7 @@ _jack-alsa-ctl() {
 				"mic_mute:mute mic of current device"
 				"raise_volume:raise volume"
 				"lower_volume:lower volume"
+				"completion:install completion script"
 			)
 
 			comp_commands() {
@@ -57,6 +58,7 @@ _jack-alsa-ctl() {
 				"mic_mute"
 				"raise_volume"
 				"lower_volume"
+				"completion"
 			)
 			
 			# call complete functions if it's a valid command
@@ -111,6 +113,13 @@ _cmd_lower_volume() {
 	_arguments \
 		"(- *)"{-h,--help}"[show command help]" \
 		":step:"
+}
+
+_cmd_completion() {
+	_arguments \
+		"(- *)"{-h,--help}"[show command help]" \
+		"--shell[shell type]: :(zsh)" \
+		":directory:_directories"
 }
 
 _jack-alsa-ctl

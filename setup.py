@@ -31,6 +31,8 @@ setup(
 	name="jack-alsa-ctl",
 	version=main_ns["__version__"],
 	description="Control JACK audio with ALSA driver easily",
+	package_dir={"jack_alsa_ctl": "jack_alsa_ctl"},
+	package_data={"jack_alsa_ctl": ["completion/*"]},
 	long_description=long_description,
 	long_description_content_type='text/markdown',
 	author="DCsunset",
