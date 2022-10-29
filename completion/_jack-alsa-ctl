@@ -1,0 +1,116 @@
+#compdef jack-alsa-ctl
+#
+# jack-alsa-ctl
+# Copyright (C) 2022 DCsunset
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as published
+# by the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+# You should have received a copy of the GNU Affero General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+#
+
+_jack-alsa-ctl() {
+	# zsh internal variables
+	local line state
+
+	# set state using ->value
+	# 1 used to describe the first arg (program itself)
+	_arguments -C \
+		"1: :->cmd" \
+		"*::arg:->arg"
+	
+	case "$state" in
+		cmd)
+			local commands=(
+				"list_devices:list available sound devices"
+				"get_device:get current device used by JACK server"
+				"set_device:set device used by JACK server"
+				"get_volume:get current volume"
+				"mute:mute current device"
+				"mic_mute:mute mic of current device"
+				"raise_volume:raise volume"
+				"lower_volume:lower volume"
+			)
+
+			comp_commands() {
+				_describe "commands" commands
+			}
+
+			# complete command first
+			_arguments ":: :comp_commands" \
+				"(- *)"{-h,--help}"[show help message]" \
+				"(- *)"{-v,--version}"[show version]"
+			;;
+		arg)
+			local commands=(
+				"list_devices"
+				"get_device"
+				"set_device"
+				"get_volume"
+				"mute:mute"
+				"mic_mute"
+				"raise_volume"
+				"lower_volume"
+			)
+			
+			# call complete functions if it's a valid command
+			if (( $commands[(Ie)$line[1]] )); then
+				_cmd_$line[1]
+			fi
+	esac
+}
+
+volume_types=(Playback Capture)
+
+_cmd_list_devices() {
+	_arguments \
+		"(- *)"{-h,--help}"[show command help]" \
+		":max_num:"
+}
+
+_cmd_get_device() {
+	_arguments \
+		"(- *)"{-h,--help}"[show command help]"
+}
+
+_cmd_set_device() {
+	_arguments \
+		"(- *)"{-h,--help}"[show command help]" \
+		":device:($(jack-alsa-ctl list_devices))"
+}
+
+_cmd_get_volume() {
+	_arguments \
+		"(- *)"{-h,--help}"[show command help]" \
+		":volume_type:($volume_types)"
+}
+
+_cmd_mute() {
+	_arguments \
+		"(- *)"{-h,--help}"[show command help]"
+}
+
+_cmd_mic_mute() {
+	_arguments \
+		"(- *)"{-h,--help}"[show command help]"
+}
+
+_cmd_raise_volume() {
+	_arguments \
+		"(- *)"{-h,--help}"[show command help]" \
+		":step:"
+}
+
+_cmd_lower_volume() {
+	_arguments \
+		"(- *)"{-h,--help}"[show command help]" \
+		":step:"
+}
+
+_jack-alsa-ctl
