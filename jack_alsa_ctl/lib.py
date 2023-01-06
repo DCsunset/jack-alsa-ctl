@@ -16,9 +16,15 @@ import subprocess
 import sys
 import re
 
-# List all sound devices
+VOLUME_TYPES = ("Playback", "Capture")
+
+global_options = {
+	"card": ""	# Empty means using the default card 0
+}
+
+# List all sound cards
 # max_num <= 0 means no limit
-def list_devices(max_num: int = 0) -> list[str]:
+def list_cards(max_num: int = 0) -> list[str]:
 	with open("/proc/asound/cards", "r") as f:
 		out = f.read()
 	regex = re.compile(r"\[\s*(.+?)\s*\]")
@@ -31,8 +37,13 @@ def list_devices(max_num: int = 0) -> list[str]:
 	return cards
    
 
-# Get current jack2 device using jack_control
-def get_jack_device():
+# Get current jack2 sound card using jack_control
+def get_jack_card():
+	print(global_options)
+	# return the provided card
+	if len(global_options["card"]) > 0:
+		return global_options["card"]
+
 	try:
 		res = subprocess.run(["jack_control", "dp"], capture_output=True)
 		if res.returncode != 0:
@@ -45,11 +56,11 @@ def get_jack_device():
 				return l[:-1].split(":")[-1]
 	except Exception as e:
 		print(e, file=sys.stderr)
-	# return default device on failure
+	# return default card on failure
 	return "0"
 
-# Set/change current jack device
-def set_jack_device_cmd(dev: str) -> list[str]:
+# Set/change current jack card
+def set_jack_card_cmd(dev: str) -> list[str]:
 	return [
 		f"jack_control dps device hw:{dev}",
 		# Restart jack after setting dev
@@ -78,38 +89,57 @@ def get_amixer_scontrols(card: str) -> list[str]:
 	# return empty on failure
 	return []
 
+# Get volume types of a specific scontrol (check for Playback and Capture)
+def get_scontrol_volume_types(card: str, scontrol: str) -> list[str]:
+	try:
+		res = subprocess.run(["amixer", "-c", card, "sget", scontrol], capture_output=True)
+		if res.returncode != 0:
+			return []
+			
+		types = []
+		for volume_type in VOLUME_TYPES:
+			regex = re.compile(f"{volume_type}.*\\[\\d?\\d?\\d%\\]")
+			output = res.stdout.decode("utf-8")
+			# find the last occurrence of the quoted name
+			if len(regex.findall(output)) > 0:
+				types.append(volume_type)
+		return types
+	except Exception as e:
+		print(e, file=sys.stderr)
+
+	# return empty on failure
+	return []
+
 	
 # Get current volume scontrol and card for amixer
-def get_current_control() -> tuple[str, str]:
-	card = get_jack_device()
+def get_current_control(volume_type: str) -> tuple[str, str]:
+	card = get_jack_card()
 	scontrols = get_amixer_scontrols(card)
 
 	# possible scontrols for volume
-	amixer_volume_scontrols = ["Master", "Headset"]
+	amixer_volume_scontrols = ["Master", "Headset", "Capture"]
 	for sc in amixer_volume_scontrols:
 		if sc in scontrols:
-			return card, sc
+			types = get_scontrol_volume_types(card, sc)
+			if volume_type in types:
+				return card, sc
 	
 	print(f"No suitable amixer volume control for card {card}", file=sys.stderr)
 	return card, ""
 
-def get_volume_cmd() -> str:
-	card, scontrol = get_current_control()
+def get_volume_cmd(volume_type: str) -> str:
+	card, scontrol = get_current_control(volume_type)
 	return f"amixer -c '{card}' sget '{scontrol}'"
 
-def mute_cmd() -> str:
-	card, scontrol = get_current_control()
-	return f"amixer -c '{card}' sset '{scontrol}' toggle"
+def mute_cmd(volume_type: str) -> str:
+	card, scontrol = get_current_control(volume_type)
+	return f"amixer -c '{card}' sset '{scontrol}' '{volume_type}' toggle"
 
-def mic_mute_cmd() -> str:
-	card = get_jack_device()
-	return f"amixer -c '{card}' sset Capture toggle"
-
-def lower_volume_cmd(step: int) -> str:
+def lower_volume_cmd(volume_type: str, step: int) -> str:
 	card, scontrol = get_current_control()
-	return f"amixer -c '{card}' sset '{scontrol}' {step}-"
+	return f"amixer -c '{card}' sset '{scontrol}' '{volume_type}' {step}-"
 
-def raise_volume_cmd(step: int) -> str:
+def raise_volume_cmd(volume_type: str, step: int) -> str:
 	card, scontrol = get_current_control()
-	return f"amixer -c '{card}' sset '{scontrol}' {step}+"
+	return f"amixer -c '{card}' sset '{scontrol}' '{volume_type}' {step}+"
 

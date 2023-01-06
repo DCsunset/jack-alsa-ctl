@@ -19,7 +19,7 @@ import subprocess
 import argparse
 import importlib.resources as pkg_resources
 from ._version import __version__
-from .lib import get_volume_cmd, mute_cmd, mic_mute_cmd, raise_volume_cmd, lower_volume_cmd, get_jack_device, list_devices, set_jack_device_cmd
+from .lib import get_volume_cmd, mute_cmd, raise_volume_cmd, lower_volume_cmd, get_jack_card, list_cards, set_jack_card_cmd, VOLUME_TYPES, global_options
 
 def error(msg: str):
 	print(msg, file=sys.stderr)
@@ -33,13 +33,11 @@ def run_cmd(cmd: list[str] | str):
 		subprocess.run(cmd, shell=True)
 
 
-volume_types = ("Capture", "Playback")
-
 def get_volume(volume_type: str):
-	if volume_type not in volume_types:
+	if volume_type not in VOLUME_TYPES:
 		error(f"Invalid volume type: {volume_type}")
 
-	res = subprocess.run(get_volume_cmd(), shell=True, capture_output=True)
+	res = subprocess.run(get_volume_cmd(volume_type), shell=True, capture_output=True)
 	out = res.stdout.decode("utf-8")
 	# filter capture volume
 	regex = re.compile(f"{volume_type}.*\\[\\d?\\d?\\d%\\]")
@@ -60,9 +58,10 @@ def main():
 	}
 
 	parser = argparse.ArgumentParser(
-		description="Control JACK audio with ALSA driver easily via CLI",
+		description="Control JACK audio with ALSA driver (or ALSA only) easily via CLI",
 		**global_config
 	)
+	parser.add_argument("-c", "--card", default="", help="Control a specific sound card (empty means using the current card)")
 	parser.add_argument("--version", action="version", version=f"%(prog)s {__version__}")
 	
 	# For commands
@@ -73,35 +72,35 @@ def main():
 		required=True
 	)
 
-	# list_devices
-	list_devices_parser = sub_parser.add_parser(
-		"list_devices",
+	# list cards
+	list_cards_parser = sub_parser.add_parser(
+		"list_cards",
 		help="list available sound devices",
 		**global_config
 	)
-	list_devices_parser.add_argument(
+	list_cards_parser.add_argument(
 		"max_num",
 		nargs="?",
 		default=0,
 		type=int,
-		help="max number of devices to display (non-positive num means no limit)"
+		help="max number of cards to display (non-positive num means no limit)"
 	)
-	# get_device
-	get_device_parser = sub_parser.add_parser(
-		"get_device",
-		help="get current device used by JACK server",
+	# get_card
+	get_card_parser = sub_parser.add_parser(
+		"get_card",
+		help="get current card used by JACK server",
 		**global_config
 	)
-	# set device
-	set_device_parser = sub_parser.add_parser(
-		"set_device",
-		help="set device used by JACK server",
+	# set card
+	set_card_parser = sub_parser.add_parser(
+		"set_card",
+		help="set card used by JACK server",
 		**global_config
 	)
-	set_device_parser.add_argument(
-		"device",
+	set_card_parser.add_argument(
+		"new_card",
 		type=str,
-		help="device name"
+		help="name of new card"
 	)
 	# get_volume
 	get_volume_parser = sub_parser.add_parser(
@@ -120,14 +119,16 @@ def main():
 	# mute
 	mute_parser = sub_parser.add_parser(
 		"mute",
-		help="mute current device",
+		help="mute",
 		**global_config
 	)
-	# mic mute
-	mic_mute_parser = sub_parser.add_parser(
-		"mic_mute",
-		help="mute mic of current device",
-		**global_config
+	mute_parser.add_argument(
+		"volume_type",
+		nargs="?",
+		metavar="type",
+		default="Playback",
+		choices=["Playback", "Capture"],
+		help="change volume of a specific type [choices: %(choices)s]"
 	)
 	# raise_volume
 	raise_volume_parser = sub_parser.add_parser(
@@ -136,8 +137,16 @@ def main():
 		**global_config
 	)
 	raise_volume_parser.add_argument(
-		"step",
+		"volume_type",
 		nargs="?",
+		metavar="type",
+		default="Playback",
+		choices=["Playback", "Capture"],
+		help="change volume of a specific type [choices: %(choices)s]"
+	)
+	raise_volume_parser.add_argument(
+		"-s",
+		"--step",
 		default=2,
 		type=int,
 		help="raise volume by a value",
@@ -147,6 +156,14 @@ def main():
 		"lower_volume",
 		help="lower volume",
 		**global_config
+	)
+	lower_volume_parser.add_argument(
+		"volume_type",
+		nargs="?",
+		metavar="type",
+		default="Playback",
+		choices=["Playback", "Capture"],
+		help="change volume of a specific type [choices: %(choices)s]"
 	)
 	lower_volume_parser.add_argument(
 		"step",
@@ -176,26 +193,28 @@ def main():
 	# Process args
 	args = parser.parse_args()
 	cmd = args.command
-	if cmd == "list_devices":
-		print("\n".join(list_devices(args.max_num)))
-	elif cmd == "get_device":
-		print(get_jack_device())
-	elif cmd == "set_device":
-		run_cmd(set_jack_device_cmd(args.device))
+	global_options["card"] = args.card
+
+	if cmd == "list_cards":
+		print("\n".join(list_cards(args.max_num)))
+	elif cmd == "get_card":
+		print(get_jack_card())
+	elif cmd == "set_card":
+		run_cmd(set_jack_card_cmd(args.new_card))
 	elif cmd == "get_volume":
 		get_volume(args.volume_type)
 	elif cmd == "mute":
-		run_cmd(mute_cmd())
-	elif cmd == "mic_mute":
-		run_cmd(mic_mute_cmd())
+		run_cmd(mute_cmd(args.volume_type))
 	elif cmd == "raise_volume":
-		run_cmd(raise_volume_cmd(args.step))
+		run_cmd(raise_volume_cmd(args.volume_type, args.step))
 	elif cmd == "lower_volume":
-		run_cmd(lower_volume_cmd(args.step))
+		run_cmd(lower_volume_cmd(args.volume_type, args.step))
 	elif cmd == "completion":
 		# resources must be included in package_data in setup.py
 		if args.shell == "zsh":
 			filename = "_jack-alsa-ctl"
+		else:
+			error(f"Shell {args.shell} not supported")
 
 		data = pkg_resources.read_text("jack_alsa_ctl.completion", filename)
 		dst = Path(args.directory).joinpath(filename)
