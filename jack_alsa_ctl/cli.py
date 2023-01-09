@@ -19,7 +19,7 @@ import subprocess
 import argparse
 import importlib.resources as pkg_resources
 from ._version import __version__
-from .lib import get_volume_cmd, mute_cmd, raise_volume_cmd, lower_volume_cmd, get_jack_card, list_cards, set_jack_card_cmd, VOLUME_TYPES, global_options
+from .lib import get_volume_cmd, toggle_cmd, raise_volume_cmd, lower_volume_cmd, get_jack_card, list_cards, set_jack_card_cmd, VOLUME_TYPES, global_options
 
 def error(msg: str):
 	print(msg, file=sys.stderr)
@@ -116,13 +116,13 @@ def main():
 		choices=["Playback", "Capture"],
 		help="get volume of a specific type [choices: %(choices)s]"
 	)
-	# mute
-	mute_parser = sub_parser.add_parser(
-		"mute",
-		help="mute",
+	# toggle
+	toggle_parser = sub_parser.add_parser(
+		"toggle",
+		help="toggle (mute/unmute)",
 		**global_config
 	)
-	mute_parser.add_argument(
+	toggle_parser.add_argument(
 		"volume_type",
 		nargs="?",
 		metavar="type",
@@ -203,8 +203,8 @@ def main():
 		run_cmd(set_jack_card_cmd(args.new_card))
 	elif cmd == "get_volume":
 		get_volume(args.volume_type)
-	elif cmd == "mute":
-		run_cmd(mute_cmd(args.volume_type))
+	elif cmd == "toggle":
+		run_cmd(toggle_cmd(args.volume_type))
 	elif cmd == "raise_volume":
 		run_cmd(raise_volume_cmd(args.volume_type, args.step))
 	elif cmd == "lower_volume":

@@ -131,7 +131,7 @@ def get_volume_cmd(volume_type: str) -> str:
 	card, scontrol = get_current_control(volume_type)
 	return f"amixer -c '{card}' sget '{scontrol}'"
 
-def mute_cmd(volume_type: str) -> str:
+def toggle_cmd(volume_type: str) -> str:
 	card, scontrol = get_current_control(volume_type)
 	return f"amixer -c '{card}' sset '{scontrol}' '{volume_type}' toggle"
 
