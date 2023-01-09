@@ -135,10 +135,10 @@ def toggle_cmd(volume_type: str) -> str:
 	return f"amixer -c '{card}' sset '{scontrol}' '{volume_type}' toggle"
 
 def lower_volume_cmd(volume_type: str, step: int) -> str:
-	card, scontrol = get_current_control()
+	card, scontrol = get_current_control(volume_type)
 	return f"amixer -c '{card}' sset '{scontrol}' '{volume_type}' {step}-"
 
 def raise_volume_cmd(volume_type: str, step: int) -> str:
-	card, scontrol = get_current_control()
+	card, scontrol = get_current_control(volume_type)
 	return f"amixer -c '{card}' sset '{scontrol}' '{volume_type}' {step}+"
 

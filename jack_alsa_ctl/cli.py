@@ -166,8 +166,8 @@ def main():
 		help="change volume of a specific type [choices: %(choices)s]"
 	)
 	lower_volume_parser.add_argument(
-		"step",
-		nargs="?",
+		"-s",
+		"--step",
 		default=2,
 		type=int,
 		help="lower volume by a value"
