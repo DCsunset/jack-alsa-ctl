@@ -23,6 +23,8 @@ _jack-alsa-ctl() {
 	# 1 used to describe the first arg (program itself)
 	_arguments -C \
 		{-c,--card}"[control a specific sound card]: :($(jack-alsa-ctl list_cards))" \
+		"(- *)"{-h,--help}"[show help message]" \
+		"(- *)"{-v,--version}"[show version]" \
 		":: :_jack-alsa-ctl_commands" \
 		"*:: :->arg"
 	
