@@ -2,13 +2,13 @@
 
 [![PyPI](https://img.shields.io/pypi/v/jack-alsa-ctl)](https://pypi.org/project/jack-alsa-ctl/)
 
-Control JACK audio with ALSA driver easily.
+Control JACK audio with ALSA driver (or ALSA only) easily.
 
 ## Dependencies
 
 `jack-alsa-ctl` depends on the following programs in your PATH:
 
-* `jack_control`
+* `jack_control` (only required by `get_cards` and `set_card`)
 * `amixer`
 
 In addition, JACK server should be configured to use ALSA driver.
@@ -44,7 +44,7 @@ Use the command `jack-alsa-ctl` directly:
 
 ```sh
 jack-alsa-ctl --help
-jack-alsa-ctl get_device
+jack-alsa-ctl get_card
 jack-alsa-ctl get_volume
 ```
 
@@ -53,8 +53,8 @@ See help messages for more usage.
 ### Library
 
 ```py
-from jack_alsa_ctl.lib import get_jack_device
-print(get_jack_device())
+from jack_alsa_ctl.lib import get_jack_card
+print(get_jack_card())
 ```
 
 
