@@ -39,7 +39,6 @@ def list_cards(max_num: int = 0) -> list[str]:
 
 # Get current jack2 sound card using jack_control
 def get_jack_card():
-	print(global_options)
 	# return the provided card
 	if len(global_options["card"]) > 0:
 		return global_options["card"]
