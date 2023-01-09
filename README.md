@@ -8,7 +8,7 @@ Control JACK audio with ALSA driver (or ALSA only) easily.
 
 `jack-alsa-ctl` depends on the following programs in your PATH:
 
-* `jack_control` (only required by `get_cards` and `set_card`)
+* `jack_control` (only required by `get_card` and `set_card`)
 * `amixer`
 
 In addition, JACK server should be configured to use ALSA driver.
