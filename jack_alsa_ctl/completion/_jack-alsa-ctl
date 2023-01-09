@@ -22,32 +22,11 @@ _jack-alsa-ctl() {
 	# set state using ->value
 	# 1 used to describe the first arg (program itself)
 	_arguments -C \
-		"1: :->cmd" \
-		"*::arg:->arg"
+		{-c,--card}"[control a specific sound card]: :($(jack-alsa-ctl list_cards))" \
+		":: :_jack-alsa-ctl_commands" \
+		"*:: :->arg"
 	
 	case "$state" in
-		cmd)
-			local commands=(
-				"list_cards:list available sound cards"
-				"get_card:get current card used by JACK server"
-				"set_card:set card used by JACK server"
-				"get_volume:get current volume"
-				"toggle:toggle (mute/unmute)"
-				"raise_volume:raise volume"
-				"lower_volume:lower volume"
-				"completion:install completion script"
-			)
-
-			comp_commands() {
-				_describe "commands" commands
-			}
-
-			# complete command first
-			_arguments ":: :comp_commands" \
-				{-c,--card}"[control a specific sound card]:($(jack-alsa-ctl list_cards))" \
-				"(- *)"{-h,--help}"[show help message]" \
-				"(- *)"{-v,--version}"[show version]"
-			;;
 		arg)
 			local commands=(
 				"list_cards"
@@ -62,57 +41,72 @@ _jack-alsa-ctl() {
 			
 			# call complete functions if it's a valid command
 			if (( $commands[(Ie)$line[1]] )); then
-				_cmd_$line[1]
+				_jack-alsa-ctl_$line[1]
 			fi
 	esac
 }
 
 volume_types=(Playback Capture)
 
-_cmd_list_cards() {
+_jack-alsa-ctl_commands() {
+	local commands=(
+		"list_cards:list available sound cards"
+		"get_card:get current card used by JACK server"
+		"set_card:set card used by JACK server"
+		"get_volume:get current volume"
+		"toggle:toggle (mute/unmute)"
+		"raise_volume:raise volume"
+		"lower_volume:lower volume"
+		"completion:install completion script"
+	)
+
+	_describe "jack-alsa-ctl commands" commands "$@"
+}
+
+_jack-alsa-ctl_list_cards() {
 	_arguments \
 		"(- *)"{-h,--help}"[show command help]" \
 		":max_num:"
 }
 
-_cmd_get_card() {
+_jack-alsa-ctl_get_card() {
 	_arguments \
 		"(- *)"{-h,--help}"[show command help]"
 }
 
-_cmd_set_card() {
+_jack-alsa-ctl_set_card() {
 	_arguments \
 		"(- *)"{-h,--help}"[show command help]" \
 		":card:($(jack-alsa-ctl list_cards))"
 }
 
-_cmd_get_volume() {
+_jack-alsa-ctl_get_volume() {
 	_arguments \
 		"(- *)"{-h,--help}"[show command help]" \
 		":volume_type:($volume_types)"
 }
 
-_cmd_toggle() {
+_jack-alsa-ctl_toggle() {
 	_arguments \
 		"(- *)"{-h,--help}"[show command help]" \
 		":volume_type:($volume_types)"
 }
 
-_cmd_raise_volume() {
-	_arguments \
-		"(- *)"{-h,--help}"[show command help]" \
-		{-s,--step}"[step]:" \
-		":volume_type:($volume_types)"
-}
-
-_cmd_lower_volume() {
+_jack-alsa-ctl_raise_volume() {
 	_arguments \
 		"(- *)"{-h,--help}"[show command help]" \
 		{-s,--step}"[step]:" \
 		":volume_type:($volume_types)"
 }
 
-_cmd_completion() {
+_jack-alsa-ctl_lower_volume() {
+	_arguments \
+		"(- *)"{-h,--help}"[show command help]" \
+		{-s,--step}"[step]:" \
+		":volume_type:($volume_types)"
+}
+
+_jack-alsa-ctl_completion() {
 	_arguments \
 		"(- *)"{-h,--help}"[show command help]" \
 		"--shell[shell type]: :(zsh)" \
