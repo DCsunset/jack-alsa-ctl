@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.0.0](https://github.com/DCsunset/jack-alsa-ctl/compare/v1.2.0...v2.0.0) (2023-01-09)
+
+
+### ⚠ BREAKING CHANGES
+
+* support specifying a sound card and fix control for mic
+
+### Features
+
+* support specifying a sound card and fix control for mic ([093f908](https://github.com/DCsunset/jack-alsa-ctl/commit/093f9081507a393e06cb3b6a9a257855b5e96291))
+* update zsh completion ([2f11cc0](https://github.com/DCsunset/jack-alsa-ctl/commit/2f11cc04a0144c5a3aeb124bebd680fca65a0090))
+
+
+### Bug Fixes
+
+* remove extra file ([42238a2](https://github.com/DCsunset/jack-alsa-ctl/commit/42238a20d2a1773d3af4e4e4268d143d64081243))
+* rename mute to toggle ([04b7d16](https://github.com/DCsunset/jack-alsa-ctl/commit/04b7d16409db124659ce30bdc5d49ef8a5e7f08c))
+
 ## [1.2.0](https://github.com/DCsunset/jack-alsa-ctl/compare/v1.1.1...v1.2.0) (2022-10-29)
 
 
