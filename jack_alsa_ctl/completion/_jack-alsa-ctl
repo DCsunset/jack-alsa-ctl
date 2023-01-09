@@ -28,12 +28,11 @@ _jack-alsa-ctl() {
 	case "$state" in
 		cmd)
 			local commands=(
-				"list_devices:list available sound devices"
-				"get_device:get current device used by JACK server"
-				"set_device:set device used by JACK server"
+				"list_cards:list available sound cards"
+				"get_card:get current card used by JACK server"
+				"set_card:set card used by JACK server"
 				"get_volume:get current volume"
-				"mute:mute current device"
-				"mic_mute:mute mic of current device"
+				"toggle:toggle (mute/unmute)"
 				"raise_volume:raise volume"
 				"lower_volume:lower volume"
 				"completion:install completion script"
@@ -45,17 +44,17 @@ _jack-alsa-ctl() {
 
 			# complete command first
 			_arguments ":: :comp_commands" \
+				{-c,--card}"[control a specific sound card]:($(jack-alsa-ctl list_cards))" \
 				"(- *)"{-h,--help}"[show help message]" \
 				"(- *)"{-v,--version}"[show version]"
 			;;
 		arg)
 			local commands=(
-				"list_devices"
-				"get_device"
-				"set_device"
+				"list_cards"
+				"get_card"
+				"set_card"
 				"get_volume"
-				"mute:mute"
-				"mic_mute"
+				"toggle"
 				"raise_volume"
 				"lower_volume"
 				"completion"
@@ -70,21 +69,21 @@ _jack-alsa-ctl() {
 
 volume_types=(Playback Capture)
 
-_cmd_list_devices() {
+_cmd_list_cards() {
 	_arguments \
 		"(- *)"{-h,--help}"[show command help]" \
 		":max_num:"
 }
 
-_cmd_get_device() {
+_cmd_get_card() {
 	_arguments \
 		"(- *)"{-h,--help}"[show command help]"
 }
 
-_cmd_set_device() {
+_cmd_set_card() {
 	_arguments \
 		"(- *)"{-h,--help}"[show command help]" \
-		":device:($(jack-alsa-ctl list_devices))"
+		":card:($(jack-alsa-ctl list_cards))"
 }
 
 _cmd_get_volume() {
@@ -93,26 +92,24 @@ _cmd_get_volume() {
 		":volume_type:($volume_types)"
 }
 
-_cmd_mute() {
+_cmd_toggle() {
 	_arguments \
-		"(- *)"{-h,--help}"[show command help]"
-}
-
-_cmd_mic_mute() {
-	_arguments \
-		"(- *)"{-h,--help}"[show command help]"
+		"(- *)"{-h,--help}"[show command help]" \
+		":volume_type:($volume_types)"
 }
 
 _cmd_raise_volume() {
 	_arguments \
 		"(- *)"{-h,--help}"[show command help]" \
-		":step:"
+		{-s,--step}"[step]:" \
+		":volume_type:($volume_types)"
 }
 
 _cmd_lower_volume() {
 	_arguments \
 		"(- *)"{-h,--help}"[show command help]" \
-		":step:"
+		{-s,--step}"[step]:" \
+		":volume_type:($volume_types)"
 }
 
 _cmd_completion() {
