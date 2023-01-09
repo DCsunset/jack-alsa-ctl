@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.0.2](https://github.com/DCsunset/jack-alsa-ctl/compare/v2.0.1...v2.0.2) (2023-01-09)
+
+
+### Bug Fixes
+
+* add global version and help flags ([e4c1e3f](https://github.com/DCsunset/jack-alsa-ctl/commit/e4c1e3ff2454612b1c109f7a04bb9a16972c43ba))
+* fix lower_volume and raise_volume cmd ([4ee63a0](https://github.com/DCsunset/jack-alsa-ctl/commit/4ee63a0b108266a5782e267d9268aebacca392aa))
+
 ### [2.0.1](https://github.com/DCsunset/jack-alsa-ctl/compare/v2.0.0...v2.0.1) (2023-01-09)
 
 
