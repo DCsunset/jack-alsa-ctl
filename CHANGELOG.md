@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.0.1](https://github.com/DCsunset/jack-alsa-ctl/compare/v2.0.0...v2.0.1) (2023-01-09)
+
+
+### Bug Fixes
+
+* fix zsh completion ([07c699b](https://github.com/DCsunset/jack-alsa-ctl/commit/07c699b70772983db4164ef7e749f97e12bb5e5b))
+* remove debug stmt ([9dbca1b](https://github.com/DCsunset/jack-alsa-ctl/commit/9dbca1bf385cecb44a7f9b207ae3f470354a6d42))
+
 ## [2.0.0](https://github.com/DCsunset/jack-alsa-ctl/compare/v1.2.0...v2.0.0) (2023-01-09)
 
 
