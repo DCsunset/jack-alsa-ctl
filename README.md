@@ -63,7 +63,7 @@ print(get_jack_card())
 AGPL-3.0. Copyright notice:
 
     jack-alsa-ctl
-    Copyright (C) 2022 DCsunset
+    Copyright (C) 2022-2023 DCsunset
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published
