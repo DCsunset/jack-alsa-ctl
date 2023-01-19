@@ -11,7 +11,7 @@ Control JACK audio with ALSA driver (or ALSA only) easily.
 * `jack_control` (only required by `get_card` and `set_card`)
 * `amixer`
 
-In addition, JACK server should be configured to use ALSA driver.
+In addition, JACK server should be started and managed by jack_control and configured to use ALSA driver.
 
 
 ## Installation
